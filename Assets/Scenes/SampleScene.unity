@@ -1359,7 +1359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_dropInterval: 0.75
-  m_keyRepeatRateLeftRight: 0.25
+  m_keyRepeatRateLeftRight: 0.1
   m_keyRepeatRateDown: 0.02
   m_keyRepeatRateRotate: 0.2
   m_gameOverPanel: {fileID: 868649714}
