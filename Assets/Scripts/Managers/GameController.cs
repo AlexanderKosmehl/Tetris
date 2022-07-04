@@ -40,6 +40,10 @@ public class GameController : MonoBehaviour
 
     SoundManager m_soundManager;
 
+    public IconToggle m_rotIconToggle;
+
+    bool m_clockwise = true;
+
     void Start()
     {
         // Initialize references to board and spawner
@@ -126,11 +130,11 @@ public class GameController : MonoBehaviour
 
         else if (Input.GetButtonDown("Rotate") && (Time.time > m_timeToNextKeyRotate))
         {
-            m_activeShape.RotateRight();
+            m_activeShape.RotateClockwise(m_clockwise);
             m_timeToNextKeyRotate = Time.time + m_keyRepeatRateRotate;
             if (!m_gameBoard.IsValidPosition(m_activeShape))
             {
-                m_activeShape.RotateLeft();
+                m_activeShape.RotateClockwise(!m_clockwise);
                 PlaySound(m_soundManager.m_errorSound, 0.5f);
             }
             else
@@ -206,5 +210,14 @@ public class GameController : MonoBehaviour
         PlaySound(m_soundManager.m_gameOverSound, 5f);
 
         m_gameOverPanel.SetActive(true);
+    }
+
+    public void ToggleRotDirection()
+    {
+        m_clockwise = !m_clockwise;
+
+        if (!m_rotIconToggle) return;
+
+        m_rotIconToggle.ToggleIcon(m_clockwise);
     }
 }

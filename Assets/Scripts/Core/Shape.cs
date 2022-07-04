@@ -8,7 +8,7 @@ public class Shape : MonoBehaviour
     public bool m_canRotate = true;
 
     void Move(Vector3 moveDirection)
-    { 
+    {
         transform.position += moveDirection;
     }
 
@@ -46,15 +46,15 @@ public class Shape : MonoBehaviour
         transform.Rotate(0, 0, 90);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void RotateClockwise(bool clockwise)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        if (clockwise)
+        {
+            RotateRight();
+        }
+        else
+        {
+            RotateLeft();
+        }
     }
 }
