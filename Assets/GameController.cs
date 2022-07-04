@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -33,6 +34,10 @@ public class GameController : MonoBehaviour
     [Range(0.02f, 1f)]
     public float m_keyRepeatRateRotate = 0.2f;
 
+    bool m_gameOver = false;
+
+    public GameObject m_gameOverPanel;
+
     void Start()
     {
         // Initialize references to board and spawner
@@ -57,6 +62,19 @@ public class GameController : MonoBehaviour
         m_timeToNextKeyLeftRight = Time.time;
         m_timeToNextKeyDown = Time.time;
         m_timeToNextKeyRotate = Time.time;
+
+        if (!m_gameOverPanel) return;
+
+        m_gameOverPanel.SetActive(false);
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!m_spawner || !m_gameBoard || !m_activeShape || m_gameOver) return;
+
+        PlayerInput();
     }
 
     void PlayerInput()
@@ -109,6 +127,14 @@ public class GameController : MonoBehaviour
     private void LandShape()
     {
         m_activeShape.MoveUp();
+
+        // Check if the shape is over the limit after landing
+        if (m_gameBoard.IsOverLimit(m_activeShape))
+        {
+            GameOver();
+            return;
+        }
+
         m_gameBoard.StoreShapeInGrid(m_activeShape);
         m_activeShape = m_spawner.SpawnShape();
 
@@ -116,20 +142,23 @@ public class GameController : MonoBehaviour
         m_timeToNextKeyLeftRight = Time.time;
         m_timeToNextKeyDown = Time.time;
         m_timeToNextKeyRotate = Time.time;
-    
+
         m_gameBoard.ClearAllCompletedRows();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Restart()
     {
-        if (!m_spawner || !m_gameBoard || !m_activeShape) return;
+        Debug.Log("Restarted");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
-        PlayerInput();
+    public void GameOver()
+    {
+        Debug.LogWarning(m_activeShape.name + " is over the limit");
+        m_gameOver = true;
 
-        if (Time.time > m_timeToDrop)
-        {
+        if (!m_gameOverPanel) return;
 
-        }
+        m_gameOverPanel.SetActive(true);
     }
 }

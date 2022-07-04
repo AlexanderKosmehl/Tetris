@@ -145,4 +145,16 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    public bool IsOverLimit(Shape shape)
+    {
+        foreach (Transform child in shape.transform)
+        {
+            if (child.transform.position.y >= (m_height - m_header))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
