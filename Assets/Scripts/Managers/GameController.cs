@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour
 
     // Drop Rate of the piece if no input happens
     public float m_dropInterval = 0.75f;
+    float m_dropIntervalModded;
+
     float m_timeToDrop;
 
     // Timing settings
@@ -93,6 +95,8 @@ public class GameController : MonoBehaviour
         m_gameOverPanel.SetActive(false);
         m_pausePanel.SetActive(false);
 
+        m_dropIntervalModded = m_dropInterval;
+
     }
 
     // Update is called once per frame
@@ -159,7 +163,7 @@ public class GameController : MonoBehaviour
 
         else if (Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown) || (Time.time > m_timeToDrop))
         {
-            m_timeToDrop = Time.time + m_dropInterval;
+            m_timeToDrop = Time.time + m_dropIntervalModded;
             m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
             m_activeShape.MoveDown();
 
@@ -201,14 +205,19 @@ public class GameController : MonoBehaviour
 
         if (completedRowCount > 0)
         {
-            if (completedRowCount > 1)
+            // Add completed rows to score
+            bool didLevelUp = m_scoreManager.ScoreLines(completedRowCount);
+
+            if (didLevelUp)
+            {
+                PlaySound(m_soundManager.m_levelUpVocal);
+                m_dropIntervalModded = Mathf.Clamp(m_dropInterval - ((float)m_scoreManager.m_level - 1) * 0.05f, 0.05f, 1f);
+            }
+            else if (completedRowCount > 1)
             {
                 AudioClip randomVocal = m_soundManager.GetRandomClip(m_soundManager.m_vocalClips);
                 PlaySound(randomVocal);
             }
-
-            // Add completed rows to score
-            m_scoreManager.ScoreLines(completedRowCount);
 
             PlaySound(m_soundManager.m_clearRowSound);
         }
