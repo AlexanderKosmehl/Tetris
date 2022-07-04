@@ -14,6 +14,10 @@ public class GameController : MonoBehaviour
     // Reference to the current active shape the user can move
     Shape m_activeShape;
 
+    SoundManager m_soundManager;
+
+    ScoreManager m_scoreManager;
+
     // Drop Rate of the piece if no input happens
     public float m_dropInterval = 0.75f;
     float m_timeToDrop;
@@ -38,7 +42,6 @@ public class GameController : MonoBehaviour
 
     public GameObject m_gameOverPanel;
 
-    SoundManager m_soundManager;
 
     public IconToggle m_rotIconToggle;
 
@@ -54,6 +57,7 @@ public class GameController : MonoBehaviour
         m_gameBoard = GameObject.FindObjectOfType<Board>();
         m_spawner = GameObject.FindObjectOfType<Spawner>();
         m_soundManager = GameObject.FindObjectOfType<SoundManager>();
+        m_scoreManager = GameObject.FindObjectOfType<ScoreManager>();
 
         if (!m_gameBoard)
         {
@@ -68,6 +72,11 @@ public class GameController : MonoBehaviour
         if (!m_soundManager)
         {
             Debug.LogWarning("WARNING! There is no sound manager defined!");
+        }
+
+        if (!m_scoreManager)
+        {
+            Debug.LogWarning("WARNING! There is no score manager defined!");
         }
 
         // Place spawner and spawn first shape
@@ -89,7 +98,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!m_spawner || !m_gameBoard || !m_activeShape || m_gameOver || !m_soundManager) return;
+        if (!m_spawner || !m_gameBoard || !m_activeShape || m_gameOver || !m_soundManager || !m_scoreManager) return;
 
         PlayerInput();
     }
@@ -197,6 +206,9 @@ public class GameController : MonoBehaviour
                 AudioClip randomVocal = m_soundManager.GetRandomClip(m_soundManager.m_vocalClips);
                 PlaySound(randomVocal);
             }
+
+            // Add completed rows to score
+            m_scoreManager.ScoreLines(completedRowCount);
 
             PlaySound(m_soundManager.m_clearRowSound);
         }
