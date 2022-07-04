@@ -131,12 +131,16 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void ClearAllCompletedRows()
+    public int ClearAllCompletedRows()
     {
+        int completedRows = 0;
+
         for (int y = 0; y < m_height; ++y)
         {
             if (IsComplete(y))
             {
+                completedRows++;
+
                 ClearRow(y);
                 ShiftRowsDown(y + 1);
 
@@ -144,6 +148,8 @@ public class Board : MonoBehaviour
                 y -= 1;
             }
         }
+
+        return completedRows;
     }
 
     public bool IsOverLimit(Shape shape)
