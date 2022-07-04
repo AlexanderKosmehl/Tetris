@@ -110,8 +110,14 @@ public class GameController : MonoBehaviour
     {
         m_activeShape.MoveUp();
         m_gameBoard.StoreShapeInGrid(m_activeShape);
-
         m_activeShape = m_spawner.SpawnShape();
+
+        // Reset key input timers
+        m_timeToNextKeyLeftRight = Time.time;
+        m_timeToNextKeyDown = Time.time;
+        m_timeToNextKeyRotate = Time.time;
+    
+        m_gameBoard.ClearAllCompletedRows();
     }
 
     // Update is called once per frame

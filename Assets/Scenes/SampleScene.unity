@@ -1027,6 +1027,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b985e19b1f197f2489f24fc852e8c015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dropInterval: 0.75
+  m_keyRepeatRateLeftRight: 0.25
+  m_keyRepeatRateDown: 0.02
+  m_keyRepeatRateRotate: 0.2
 --- !u!4 &951252121
 Transform:
   m_ObjectHideFlags: 0
