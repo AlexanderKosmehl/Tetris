@@ -44,6 +44,10 @@ public class GameController : MonoBehaviour
 
     bool m_clockwise = true;
 
+    public bool m_isPaused = false;
+
+    public GameObject m_pausePanel;
+
     void Start()
     {
         // Initialize references to board and spawner
@@ -75,9 +79,10 @@ public class GameController : MonoBehaviour
         m_timeToNextKeyDown = Time.time;
         m_timeToNextKeyRotate = Time.time;
 
-        if (!m_gameOverPanel) return;
+        if (!m_gameOverPanel || !m_pausePanel) return;
 
         m_gameOverPanel.SetActive(false);
+        m_pausePanel.SetActive(false);
 
     }
 
@@ -154,6 +159,10 @@ public class GameController : MonoBehaviour
                 LandShape();
             }
         }
+        else if (Input.GetButtonDown("Pause"))
+        {
+            TogglePause();
+        }
 
 
     }
@@ -181,7 +190,7 @@ public class GameController : MonoBehaviour
 
         PlaySound(m_soundManager.m_dropSound, 0.75f);
 
-        if (completedRowCount > 0) 
+        if (completedRowCount > 0)
         {
             if (completedRowCount > 1)
             {
@@ -197,6 +206,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Restarted");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1;
     }
 
     public void GameOver()
@@ -219,5 +229,19 @@ public class GameController : MonoBehaviour
         if (!m_rotIconToggle) return;
 
         m_rotIconToggle.ToggleIcon(m_clockwise);
+    }
+
+    public void TogglePause()
+    {
+        if (m_gameOver) return;
+        m_isPaused = !m_isPaused;
+        Time.timeScale = (m_isPaused) ? 0 : 1;
+
+        if (!m_pausePanel) return;
+        m_pausePanel.SetActive(m_isPaused);
+
+        if (!m_soundManager) return;
+        m_soundManager.m_musicSource.volume = (m_isPaused) ? m_soundManager.m_musicVolume * 0.25f : m_soundManager.m_musicVolume;
+
     }
 }
