@@ -66,6 +66,7 @@ public class ScoreManager : MonoBehaviour
     {
         m_level = 1;
         m_lines = m_linesPerLevel * m_level;
+        UpdateUIText();
     }
 
     void UpdateUIText()

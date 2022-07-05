@@ -24,6 +24,10 @@ public class GameController : MonoBehaviour
 
     // Drop Rate of the piece if no input happens
     public float m_dropInterval = 0.75f;
+
+    [Range(0.05f, 0.3f)]
+    public float m_difficultyMultiplier = 0.1f;
+
     float m_dropIntervalModded;
 
     float m_timeToDrop;
@@ -245,7 +249,7 @@ public class GameController : MonoBehaviour
             if (didLevelUp)
             {
                 PlaySound(m_soundManager.m_levelUpVocal);
-                m_dropIntervalModded = Mathf.Clamp(m_dropInterval - ((float)m_scoreManager.m_level - 1) * 0.05f, 0.05f, 1f);
+                m_dropIntervalModded = Mathf.Clamp(m_dropInterval - ((float)m_scoreManager.m_level - 1) * m_difficultyMultiplier, 0.05f, 1f);
             }
             else if (m_gameBoard.m_completedRows > 1)
             {
