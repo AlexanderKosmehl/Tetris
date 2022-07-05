@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
 
     float m_queueScale = 0.5f;
 
-    void Start()
+    void Awake()
     {
         InitQueue();
     }
