@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     // Reference to the current active shape the user can move
     Shape m_activeShape;
 
+    GhostHandler m_ghost;
+
     SoundManager m_soundManager;
 
     ScoreManager m_scoreManager;
@@ -60,6 +62,7 @@ public class GameController : MonoBehaviour
         m_spawner = GameObject.FindObjectOfType<Spawner>();
         m_soundManager = GameObject.FindObjectOfType<SoundManager>();
         m_scoreManager = GameObject.FindObjectOfType<ScoreManager>();
+        m_ghost = GameObject.FindObjectOfType<GhostHandler>();
 
         if (!m_gameBoard)
         {
@@ -105,6 +108,13 @@ public class GameController : MonoBehaviour
         if (!m_spawner || !m_gameBoard || !m_activeShape || m_gameOver || !m_soundManager || !m_scoreManager) return;
 
         PlayerInput();
+    }
+
+    void LateUpdate()
+    {
+        if (!m_ghost) return;
+
+        m_ghost.DrawGhost(m_activeShape, m_gameBoard);
     }
 
     void PlaySound(AudioClip clip, float volMultiplier = 1)
@@ -192,6 +202,12 @@ public class GameController : MonoBehaviour
         }
 
         m_gameBoard.StoreShapeInGrid(m_activeShape);
+        
+        if (m_ghost)
+        {
+            m_ghost.Reset();
+        }
+        
         m_activeShape = m_spawner.SpawnShape();
 
         // Reset key input timers
