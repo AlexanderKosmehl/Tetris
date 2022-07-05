@@ -156,7 +156,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        else if (Input.GetButtonDown("Rotate") && (Time.time > m_timeToNextKeyRotate))
+        else if (Input.GetButtonDown("Rotate"))
         {
             m_activeShape.RotateClockwise(m_clockwise);
             m_timeToNextKeyRotate = Time.time + m_keyRepeatRateRotate;
