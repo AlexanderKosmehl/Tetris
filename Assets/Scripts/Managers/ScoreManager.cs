@@ -18,16 +18,13 @@ public class ScoreManager : MonoBehaviour
     public Text m_levelText;
     public Text m_scoreText;
 
+    
+    public ParticleSystem m_levelUpFx;
+
     // Start is called before the first frame update
     void Start()
     {
         Reset();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public bool ScoreLines(int n)
@@ -84,5 +81,10 @@ public class ScoreManager : MonoBehaviour
     {
         m_level++;
         m_lines = m_linesPerLevel * m_level;
+
+        if (m_levelUpFx) 
+        {
+            m_levelUpFx.Play();
+        }
     }
 }

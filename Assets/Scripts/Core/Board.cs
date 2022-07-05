@@ -10,7 +10,11 @@ public class Board : MonoBehaviour
 
     public int m_header = 8;
 
+    public int m_completedRows = 0;
+
     Transform[,] m_grid;
+
+    public ParticlePlayer[] m_rowGlowFx = new ParticlePlayer[4];
 
     void Awake()
     {
@@ -20,11 +24,6 @@ public class Board : MonoBehaviour
     void Start()
     {
         DrawEmptyCells();
-    }
-
-    void Update()
-    {
-
     }
 
     bool IsWithinBoard(int x, int y)
@@ -131,25 +130,33 @@ public class Board : MonoBehaviour
         }
     }
 
-    public int ClearAllCompletedRows()
+    public IEnumerator ClearAllCompletedRows()
     {
-        int completedRows = 0;
+        m_completedRows = 0;
 
+        // Place glow effects
         for (int y = 0; y < m_height; ++y)
         {
             if (IsComplete(y))
             {
-                completedRows++;
-
-                ClearRow(y);
-                ShiftRowsDown(y + 1);
-
-                // Check row again in case a completed row gets moved into it
-                y -= 1;
+                ClearRowFX(m_completedRows, y);
+                m_completedRows++;
             }
         }
 
-        return completedRows;
+        yield return new WaitForSeconds(0.5f);
+
+        // Clear lines and remaining ones down
+        for (int y = 0; y < m_height; ++y)
+        {
+            if (IsComplete(y))
+            {
+                ClearRow(y);
+                ShiftRowsDown(y + 1);
+                yield return new WaitForSeconds(0.3f);
+                y -= 1;
+            }
+        }
     }
 
     public bool IsOverLimit(Shape shape)
@@ -162,5 +169,13 @@ public class Board : MonoBehaviour
             }
         }
         return false;
+    }
+
+    void ClearRowFX(int idx, int y)
+    {
+        if (!m_rowGlowFx[idx]) return;
+
+        m_rowGlowFx[idx].transform.position = new Vector3(0, y, -2f);
+        m_rowGlowFx[idx].Play();
     }
 }

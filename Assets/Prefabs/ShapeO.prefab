@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a2ef2e51ac15b3042a64b02bbf62136c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c189777a7a13b5d41982201948b11a5e, type: 3}
   m_Color: {r: 1, g: 0.8745099, b: 0.12941177, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -153,7 +153,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a2ef2e51ac15b3042a64b02bbf62136c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c189777a7a13b5d41982201948b11a5e, type: 3}
   m_Color: {r: 1, g: 0.8745099, b: 0.12941177, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -235,7 +235,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a2ef2e51ac15b3042a64b02bbf62136c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c189777a7a13b5d41982201948b11a5e, type: 3}
   m_Color: {r: 1, g: 0.8745099, b: 0.12941177, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -295,6 +295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_canRotate: 0
   m_queueOffset: {x: -0.25, y: 0.25, z: 0}
+  glowSquareTag: LandShapeFx
 --- !u!1 &7058474736031721702
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +367,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a2ef2e51ac15b3042a64b02bbf62136c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c189777a7a13b5d41982201948b11a5e, type: 3}
   m_Color: {r: 1, g: 0.8745099, b: 0.12941177, a: 1}
   m_FlipX: 0
   m_FlipY: 0

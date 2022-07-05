@@ -11,6 +11,8 @@ public class Spawner : MonoBehaviour
 
     float m_queueScale = 0.5f;
 
+    public ParticleSystem m_spawnFx;
+
     void Awake()
     {
         InitQueue();
@@ -31,9 +33,16 @@ public class Spawner : MonoBehaviour
     public Shape SpawnShape()
     {
         Shape shape = null;
+
         shape = GetQueuedShape();
         shape.transform.position = transform.position;
-        shape.transform.localScale = Vector3.one;
+        
+        StartCoroutine(GrowShape(shape, transform.position, 0.25f));
+
+        if (m_spawnFx)
+        {
+            m_spawnFx.Play();
+        }
 
         if (!shape)
         {
@@ -74,11 +83,11 @@ public class Spawner : MonoBehaviour
         {
             firstShape = m_queuedShapes[0];
         }
-        
+
         for (int i = 1; i < m_queuedShapes.Length; i++)
         {
-            m_queuedShapes[i-1] = m_queuedShapes[i];
-            m_queuedShapes[i-1].transform.position = m_queuedXforms[i-1].position + m_queuedShapes[i-1].m_queueOffset;
+            m_queuedShapes[i - 1] = m_queuedShapes[i];
+            m_queuedShapes[i - 1].transform.position = m_queuedXforms[i - 1].position + m_queuedShapes[i - 1].m_queueOffset;
         }
 
         m_queuedShapes[m_queuedShapes.Length - 1] = null;
@@ -86,5 +95,24 @@ public class Spawner : MonoBehaviour
         FillQueue();
 
         return firstShape;
+    }
+
+    IEnumerator GrowShape(Shape shape, Vector3 position, float growTime = 0.5f)
+    {
+        float size = 0f;
+
+        growTime = Mathf.Clamp(growTime, 0.1f, 2f);
+
+        float sizeDelta = 1f / growTime * Time.deltaTime;
+
+        while (size < 1f)
+        {
+            shape.transform.localScale = new Vector3(size, size, size);
+            size += sizeDelta;
+            shape.transform.position = position;
+            yield return null;
+        }
+
+        shape.transform.localScale = Vector3.one;
     }
 }

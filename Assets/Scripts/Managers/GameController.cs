@@ -57,6 +57,8 @@ public class GameController : MonoBehaviour
 
     public GameObject m_pausePanel;
 
+    public ParticlePlayer m_gameOverFx;
+
     void Start()
     {
         // Initialize references to board and spawner
@@ -199,6 +201,8 @@ public class GameController : MonoBehaviour
 
     private void LandShape()
     {
+        if (!m_activeShape) return;
+
         m_activeShape.MoveUp();
 
         // Check if the shape is over the limit after landing
@@ -209,6 +213,8 @@ public class GameController : MonoBehaviour
         }
 
         m_gameBoard.StoreShapeInGrid(m_activeShape);
+
+        m_activeShape.LandShapeFx();
 
         if (m_ghost)
         {
@@ -227,21 +233,21 @@ public class GameController : MonoBehaviour
         m_timeToNextKeyDown = Time.time;
         m_timeToNextKeyRotate = Time.time;
 
-        int completedRowCount = m_gameBoard.ClearAllCompletedRows();
+        m_gameBoard.StartCoroutine("ClearAllCompletedRows");
 
         PlaySound(m_soundManager.m_dropSound, 0.75f);
 
-        if (completedRowCount > 0)
+        if (m_gameBoard.m_completedRows > 0)
         {
             // Add completed rows to score
-            bool didLevelUp = m_scoreManager.ScoreLines(completedRowCount);
+            bool didLevelUp = m_scoreManager.ScoreLines(m_gameBoard.m_completedRows);
 
             if (didLevelUp)
             {
                 PlaySound(m_soundManager.m_levelUpVocal);
                 m_dropIntervalModded = Mathf.Clamp(m_dropInterval - ((float)m_scoreManager.m_level - 1) * 0.05f, 0.05f, 1f);
             }
-            else if (completedRowCount > 1)
+            else if (m_gameBoard.m_completedRows > 1)
             {
                 AudioClip randomVocal = m_soundManager.GetRandomClip(m_soundManager.m_vocalClips);
                 PlaySound(randomVocal);
@@ -263,12 +269,25 @@ public class GameController : MonoBehaviour
         Debug.LogWarning(m_activeShape.name + " is over the limit");
         m_gameOver = true;
 
-        if (!m_gameOverPanel) return;
-
         PlaySound(m_soundManager.m_gameOverVocal);
         PlaySound(m_soundManager.m_gameOverSound, 5f);
 
-        m_gameOverPanel.SetActive(true);
+        StartCoroutine(GameOverRoutine());
+    }
+
+    IEnumerator GameOverRoutine()
+    {
+        if (m_gameOverFx)
+        {
+            m_gameOverFx.Play();
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        if (m_gameOverPanel)
+        {
+            m_gameOverPanel.SetActive(true);
+        }
     }
 
     public void ToggleRotDirection()
