@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
 
     GhostHandler m_ghost;
 
+    Holder m_holder;
+
     SoundManager m_soundManager;
 
     ScoreManager m_scoreManager;
@@ -63,6 +65,7 @@ public class GameController : MonoBehaviour
         m_soundManager = GameObject.FindObjectOfType<SoundManager>();
         m_scoreManager = GameObject.FindObjectOfType<ScoreManager>();
         m_ghost = GameObject.FindObjectOfType<GhostHandler>();
+        m_holder = GameObject.FindObjectOfType<Holder>();
 
         if (!m_gameBoard)
         {
@@ -186,6 +189,10 @@ public class GameController : MonoBehaviour
         {
             TogglePause();
         }
+        else if (Input.GetButtonDown("Hold"))
+        {
+            Hold();
+        }
 
 
     }
@@ -202,12 +209,17 @@ public class GameController : MonoBehaviour
         }
 
         m_gameBoard.StoreShapeInGrid(m_activeShape);
-        
+
         if (m_ghost)
         {
             m_ghost.Reset();
         }
-        
+
+        if (m_holder)
+        {
+            m_holder.m_canRelease = true;
+        }
+
         m_activeShape = m_spawner.SpawnShape();
 
         // Reset key input timers
@@ -280,5 +292,35 @@ public class GameController : MonoBehaviour
         if (!m_soundManager) return;
         m_soundManager.m_musicSource.volume = (m_isPaused) ? m_soundManager.m_musicVolume * 0.25f : m_soundManager.m_musicVolume;
 
+    }
+
+    public void Hold()
+    {
+        if (!m_holder) return;
+
+        if (!m_holder.m_heldShape)
+        {
+            m_holder.Catch(m_activeShape);
+            m_activeShape = m_spawner.SpawnShape();
+            PlaySound(m_soundManager.m_holdSound);
+        }
+        else if (m_holder.m_canRelease)
+        {
+            Shape temp = m_activeShape;
+            m_activeShape = m_holder.Release();
+            m_activeShape.transform.position = m_spawner.transform.position;
+            m_holder.Catch(temp);
+            PlaySound(m_soundManager.m_holdSound);
+        }
+        else
+        {
+            Debug.LogWarning("HOLDER WARNING! Unable to swap twice in one turn!");
+            PlaySound(m_soundManager.m_errorSound);
+        }
+
+        if (m_ghost)
+        {
+            m_ghost.Reset();
+        }
     }
 }
